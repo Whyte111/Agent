@@ -1,0 +1,53 @@
+{
+  "held_at": "2025-09-18 14:00-15:00",
+  "place": "上海张江 3 号楼 5 层会议室",
+  "topic": "华东区客户交付复盘会",
+  "attendees": [
+    "张伟",
+    "李娜",
+    "王强",
+    "陈静"
+  ],
+  "action_items": [
+    {
+      "owner": "张伟",
+      "action": "给客户演示新版本",
+      "due": "下周一",
+      "evidence_quote": "下周一我要去给客户演示新版本"
+    },
+    {
+      "owner": null,
+      "action": "搭建客户现场演示环境",
+      "due": "周五前",
+      "evidence_quote": "客户要求周五前把现场演示环境搭好"
+    },
+    {
+      "owner": "陈静",
+      "action": "把报价单给财务审核",
+      "due": "下周二",
+      "evidence_quote": "报价单我这边下周二给到财务审核"
+    },
+    {
+      "owner": "王强",
+      "action": "补文档并发群里",
+      "due": "周五前",
+      "evidence_quote": "文档我来补，周五前发群里"
+    }
+  ],
+  "risks": [
+    {
+      "basis": "owner",
+      "severity": "high",
+      "evidence_quote": "客户要求周五前把现场演示环境搭好，但现在还没有人认领",
+      "owner": null,
+      "due": "周五前",
+      "suggestion": "明确现场演示环境责任人（候选：王强）并锁定周五前完成"
+    },
+    {
+      "basis": "deadline",
+      "severity": "high",
+      "evidence_quote": "对外我们说下周一交付，但内部排期写的是下周三上线",
+      "suggestion": "对外口径与内部排期二选一，发出前由销售与交付共同确认"
+    }
+  ]
+}

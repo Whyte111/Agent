@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI 外脑 Demo</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">◆</span>
+    <div>
+      <h1>AI 外脑 Demo</h1>
+      <p class="sub">对话 · 会议风险 → 待办 → 真实发信</p>
+    </div>
+  </div>
+  <div class="badges" id="badges">
+    <span class="badge badge-muted">检测依赖中…</span>
+  </div>
+</header>
+
+<main class="layout">
+  <!-- ============ 对话 ============ -->
+  <section class="card chat-card">
+    <div class="report-head">
+      <h2>对话</h2>
+      <span class="badge low" id="chat-session">-</span>
+    </div>
+
+    <div id="messages" class="messages">
+      <div class="msg assistant">
+        <div class="bubble">准备好了。可以问我问题，也可以在右侧上传会议 TXT 或 PDF。</div>
+      </div>
+    </div>
+
+    <form id="chat-form" class="chat-input">
+      <textarea id="chat-text" rows="2" placeholder="问点什么…（Enter 发送，Shift+Enter 换行）"></textarea>
+      <button type="submit" id="chat-send">发送</button>
+    </form>
+    <p class="hint" id="chat-hint">上下文保留最近 12 条 / 6000 字；工具调用显示在气泡下方</p>
+  </section>
+
+  <!-- ============ 侧栏 ============ -->
+  <aside class="side">
+    <section class="card">
+      <h2>上传会议原文</h2>
+      <form id="upload-form" autocomplete="off">
+        <label class="field">
+          <span>收件人邮箱</span>
+          <input type="email" name="mail_to" id="mail_to" placeholder="demo@example.com" value="demo@example.com" required />
+          <small>骨架 U3：收件人由上传表单填写，不从原文抽取</small>
+        </label>
+
+        <label class="field">
+          <span>会议 TXT 文件</span>
+          <input type="file" name="file" id="file" accept=".txt" required />
+          <small>仅 .txt；≤20MB；同一文件重复上传不会重复发信</small>
+        </label>
+
+        <button type="submit" id="submit-btn">上传并分析</button>
+        <p class="hint">样本在 <code>data/samples/</code>：S1 高风险 / S2 无风险 / S3 边界</p>
+      </form>
+      <div id="status" class="status hidden"></div>
+    </section>
+
+    <section class="card">
+      <h2>上传 PDF 知识库</h2>
+      <form id="pdf-form" autocomplete="off">
+        <label class="field">
+          <span>PDF 文件</span>
+          <input type="file" name="file" id="pdf-file" accept=".pdf" required />
+          <small>≤20MB / ≤50 页；扫描版不支持（无 OCR）；同一文件重复上传复用索引</small>
+        </label>
+        <button type="submit" id="pdf-submit-btn">上传并建索引</button>
+        <p class="hint">入库后直接对话提问，回答会标出页码与 chunk_id</p>
+      </form>
+      <div id="pdf-status" class="status hidden"></div>
+    </section>
+
+    <section class="card">
+      <h2>生成 PPT</h2>
+      <form id="ppt-form" autocomplete="off">
+        <label class="field">
+          <span>PPT 主题</span>
+          <input type="text" name="topic" id="ppt-topic" placeholder="例如：星云项目季度汇报" required />
+          <small>固定 5 页：封面 + 背景 / 核心 / 计划 / 总结；也可直接在对话里说「生成 PPT」</small>
+        </label>
+        <button type="submit" id="ppt-submit-btn">生成并下载</button>
+        <p class="hint">产出真实 .pptx，可直接用 PowerPoint / WPS 打开</p>
+      </form>
+      <div id="ppt-status" class="status hidden"></div>
+      <div id="ppt-result" class="artifact-box hidden"></div>
+    </section>
+
+    <section class="card result-card" id="result">
+      <div class="empty" id="empty-state">
+        <h2>分析结果</h2>
+        <p>上传后在这里显示：风险表、待办表、发信状态、send_log。</p>
+      </div>
+
+      <div id="report" class="hidden">
+        <div class="report-head">
+          <h2>分析结果</h2>
+          <span id="mail-badge" class="badge">-</span>
+        </div>
+        <p class="meta" id="meeting-meta"></p>
+        <p class="gates" id="gates-summary"></p>
+
+        <h3>风险项 <span class="count" id="risk-count">0</span></h3>
+        <table class="grid" id="risk-table">
+          <thead><tr><th>级别</th><th>类型</th><th>原文证据</th><th>建议</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <h3>待办 <span class="count" id="todo-count">0</span></h3>
+        <table class="grid" id="todo-table">
+          <thead><tr><th>负责人</th><th>动作</th><th>截止</th><th>状态</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <h3>send_log</h3>
+        <table class="grid" id="send-table">
+          <thead><tr><th>时间</th><th>状态</th><th>收件人</th><th>dedupe_key</th><th>备注</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="muted" id="send-detail"></p>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="report-head">
+        <h2>长期记忆</h2>
+        <button type="button" class="mini" id="mem-refresh">刷新</button>
+      </div>
+      <p class="meta">人物 / 时间 / 地点 / 主题 · 全局跨会话 · 来源可追溯</p>
+      <div id="memory-list" class="mem-list"><p class="muted">加载中…</p></div>
+    </section>
+  </aside>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>

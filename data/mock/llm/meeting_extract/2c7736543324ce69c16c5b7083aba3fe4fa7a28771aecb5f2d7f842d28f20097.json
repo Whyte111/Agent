@@ -1,0 +1,57 @@
+{
+  "held_at": "2025-09-20 15:30-16:20",
+  "place": "北京望京 B 座 7 层会议室",
+  "topic": "产品迭代需求评审",
+  "attendees": [
+    "赵敏",
+    "孙磊",
+    "周涛",
+    "吴倩"
+  ],
+  "action_items": [
+    {
+      "owner": "孙磊",
+      "action": "给出报表导出技术方案结论",
+      "due": "下周三",
+      "evidence_quote": "报表导出的技术方案我下周三给结论"
+    }
+  ],
+  "risks": [
+    {
+      "basis": "owner",
+      "severity": "mid",
+      "evidence_quote": "权限模块的测试用例需要有人认领一下，这个还没人负责",
+      "suggestion": "指定测试用例负责人"
+    },
+    {
+      "basis": "owner",
+      "severity": "mid",
+      "evidence_quote": "接口文档得补，但具体谁写还没定",
+      "suggestion": "指定接口文档撰写人"
+    },
+    {
+      "basis": "owner",
+      "severity": "mid",
+      "evidence_quote": "运营活动的方案还没有人牵头，先记一下",
+      "suggestion": "指定运营方案牵头人"
+    },
+    {
+      "basis": "deadline",
+      "severity": "low",
+      "evidence_quote": "权限模块什么时候上线还没排",
+      "suggestion": "补充上线时间"
+    },
+    {
+      "basis": "deadline",
+      "severity": "low",
+      "evidence_quote": "测试大概要做一轮，具体时间到时候再看",
+      "suggestion": "补充测试窗口"
+    },
+    {
+      "basis": "deadline",
+      "severity": "high",
+      "evidence_quote": "数据库迁移的时间还没定，下周再看",
+      "suggestion": "（这条用来验证证据校验，不应入库）"
+    }
+  ]
+}

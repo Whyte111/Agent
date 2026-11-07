@@ -1,0 +1,25 @@
+__pycache__/
+*.pyc
+.env
+
+# 本地运行时数据（含真实收件人/会议内容，禁止上传）
+data/app.db
+data/app.db-*
+data/uploads/
+data/outbox/
+data/generated/
+data/backups/
+data/.qa*
+.qa-data/
+
+# 本地交付证据（含真实收件邮箱/截图，禁止上传）
+evidence/
+
+# 历史交接/过程材料（含本地路径与个人信息，禁止上传）
+delivery/
+
+# 本地工具链/临时文件
+.tmp/
+.vendor/
+.venv/
+*.eml
